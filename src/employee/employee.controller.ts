@@ -10,33 +10,37 @@ import {
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './dtos/create-employee.dto';
+import { Employee } from './employee.entity';
 
 @Controller('/api/employee')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
   @Post()
-  async create(@Body() createEmployeeDto: CreateEmployeeDto) {
-    this.employeeService.create(createEmployeeDto);
+  create(@Body() createEmployeeDto: CreateEmployeeDto) {
+    return this.employeeService.create(createEmployeeDto);
   }
 
   @Get()
-  findAll(@Query() query) {
-    return `This action returns all cats (limit: ${query.limit} items)`;
+  findAll() {
+    return this.employeeService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id) {
-    return `This action returns a #${id} cat`;
+    return this.employeeService.findById(id);
   }
 
   @Put(':id')
-  update(@Param('id') id, @Body() updateCatDto) {
-    return `This action updates a #${id} cat`;
+  update(
+    @Param('id') id,
+    @Body() createEmployeeDto: Partial<CreateEmployeeDto>,
+  ) {
+    return this.employeeService.findByIdAndUpdate(id, createEmployeeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id) {
-    return `This action removes a #${id} cat`;
+  delete(@Param('id') id) {
+    return this.employeeService.findByIdAndDelete(id);
   }
 }
