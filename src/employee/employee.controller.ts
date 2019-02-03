@@ -14,33 +14,33 @@ import { Employee } from './employee.entity';
 
 @Controller('/api/employee')
 export class EmployeeController {
-  constructor(private readonly employeeService: EmployeeService) {}
+  constructor(private readonly service: EmployeeService) {}
 
   @Post()
-  create(@Body() createEmployeeDto: CreateEmployeeDto) {
-    return this.employeeService.create(createEmployeeDto);
+  createEmployee(@Body() createEmployeeDto: CreateEmployeeDto) {
+    return this.service.create(createEmployeeDto);
   }
 
   @Get()
-  findAll() {
-    return this.employeeService.findAll();
+  findAllEmployees() {
+    return this.service.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id) {
-    return this.employeeService.findById(id);
+  findEmployee(@Param('id') id) {
+    return this.service.findById(id);
   }
 
   @Put(':id')
-  update(
+  updateEmployee(
     @Param('id') id,
     @Body() createEmployeeDto: Partial<CreateEmployeeDto>,
   ) {
-    return this.employeeService.findByIdAndUpdate(id, createEmployeeDto);
+    return this.service.findByIdAndUpdate(id, createEmployeeDto);
   }
 
   @Delete(':id')
-  delete(@Param('id') id) {
-    return this.employeeService.findByIdAndDelete(id);
+  deleteEmployee(@Param('id') id) {
+    return this.service.findByIdAndDelete(id);
   }
 }

@@ -8,31 +8,33 @@ import { CreateEmployeeDto } from './dtos/create-employee.dto';
 export class EmployeeService {
   constructor(
     @InjectRepository(Employee)
-    private readonly employeeRepository: Repository<Employee>,
+    private readonly repository: Repository<Employee>,
   ) {}
 
   async create(createEmployeeDto: CreateEmployeeDto) {
-    const employee = this.employeeRepository.create(createEmployeeDto);
-    return await this.employeeRepository.save(employee);
+    const employee = this.repository.create(createEmployeeDto);
+    return await this.repository.save(employee);
   }
 
   async findAll() {
-    return await this.employeeRepository.find();
+    return await this.repository.find();
   }
 
   async findById(id: any) {
-    return await this.employeeRepository.findOne(id);
+    return await this.repository.findOne(id);
   }
 
   async findByIdAndUpdate(
     id: string,
     createEmployeeDto: Partial<CreateEmployeeDto>,
   ) {
-    await this.employeeRepository.update(id, createEmployeeDto);
-    return this.employeeRepository.findOne(id);
+    const employeeToUpdate = await this.repository.findOne(id);
+    const updated: Employee = { ...employeeToUpdate, ...createEmployeeDto };
+    return await this.repository.save(updated);
   }
 
   async findByIdAndDelete(id: string) {
-    return await this.employeeRepository.delete(id);
+    const employeeToDelete = await this.repository.findOne(id);
+    return await this.repository.remove(employeeToDelete);
   }
 }
