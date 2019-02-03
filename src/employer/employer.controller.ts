@@ -17,6 +17,7 @@ export class EmployerController {
   // GET
   @Get()
   getAllEmployers() {
+    // TODO: Get foreign key from User and if priviledged, return matching employers.
     return this.service.findAll();
   }
 
