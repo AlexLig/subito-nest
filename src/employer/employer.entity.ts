@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { CreateEmployerDto } from './createEmployer.dto';
 
 @Entity()
 export class Employer {
