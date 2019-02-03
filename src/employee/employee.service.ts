@@ -11,28 +11,16 @@ export class EmployeeService {
     private readonly employeeRepository: Repository<Employee>,
   ) {}
 
-  async create(createEmployeeDto: CreateEmployeeDto) {
-    const employee = this.employeeRepository.create(createEmployeeDto);
-    return await this.employeeRepository.save(employee);
-  }
+  async create(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
+    const { name, vat } = createEmployeeDto;
 
-  async findAll() {
+    const employee = new Employee();
+    employee.name = name;
+    employee.vat = vat;
+
+    return this.employeeRepository.save(employee);
+  }
+  async findAll(): Promise<Employee[]> {
     return await this.employeeRepository.find();
-  }
-
-  async findById(id: any) {
-    return await this.employeeRepository.findOne(id);
-  }
-
-  async findByIdAndUpdate(
-    id: string,
-    createEmployeeDto: Partial<CreateEmployeeDto>,
-  ) {
-    await this.employeeRepository.update(id, createEmployeeDto);
-    return this.employeeRepository.findOne(id);
-  }
-
-  async findByIdAndDelete(id: string) {
-    return await this.employeeRepository.delete(id);
   }
 }

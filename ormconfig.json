@@ -3,9 +3,8 @@
   "host": "localhost",
   "port": 5432,
   "username": "postgres",
-  "password": "@lex2244",
+  "password": "postgres",
   "database": "subito",
   "entities": ["src/**/**.entity{.ts,.js}"],
-  "autoSchemaSync": true,
-  "synchronize": true
+  "autoSchemaSync": true
 }
