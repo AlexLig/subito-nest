@@ -3,6 +3,7 @@ import { Employee } from './employee.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateEmployeeDto } from './dtos/create-employee.dto';
+import { notFoundException } from 'src/shared/HttpExceptions';
 
 @Injectable()
 export class EmployeeService {
@@ -20,8 +21,10 @@ export class EmployeeService {
     return await this.repository.find();
   }
 
-  async findById(id: any) {
-    return await this.repository.findOne(id);
+  async findById(id: string) {
+    const employee = await this.repository.findOne(id);
+    notFoundException(employee);
+    return employee;
   }
 
   async findByIdAndUpdate(
@@ -29,12 +32,14 @@ export class EmployeeService {
     createEmployeeDto: Partial<CreateEmployeeDto>,
   ) {
     const employeeToUpdate = await this.repository.findOne(id);
+    notFoundException(employeeToUpdate);
     const updated: Employee = { ...employeeToUpdate, ...createEmployeeDto };
     return await this.repository.save(updated);
   }
 
   async findByIdAndDelete(id: string) {
     const employeeToDelete = await this.repository.findOne(id);
+    notFoundException(employeeToDelete);
     return await this.repository.remove(employeeToDelete);
   }
 }
