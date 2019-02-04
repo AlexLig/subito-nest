@@ -10,7 +10,7 @@ import {
 import { EmployerService } from './employer.service';
 import { CreateEmployerDto } from './dto/createEmployer.dto';
 
-@Controller('employer')
+@Controller('/api/employer')
 export class EmployerController {
   constructor(private readonly service: EmployerService) {}
 
