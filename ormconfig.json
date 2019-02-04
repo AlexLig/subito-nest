@@ -8,7 +8,7 @@
   "entities": ["src/**/**.entity{.ts,.js}"],
   "autoSchemaSync": true,
   "synchronize": true,
-  "logging": "all",
+  "logging": ["error", "warn", "info", "log", "schema"],
   "logger": "file",
   "maxQueryExecutionTime": 1000
 }
