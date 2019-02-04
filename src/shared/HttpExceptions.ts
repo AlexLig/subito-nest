@@ -1,8 +1,9 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { generalErrors as e } from './';
 
-const notFoundMsg = 'Employee with given id was not found';
-export const notFoundException = (value: any, message?: string) => {
+/** Throws a 404 Not Found HTTP exception if the value does not exist. */
+export const notFoundException = (value: any, message = e.NOT_FOUND) => {
   if (!value) {
-    throw new HttpException(message || notFoundMsg, HttpStatus.NOT_FOUND);
+    throw new HttpException(message, HttpStatus.NOT_FOUND);
   }
 };
