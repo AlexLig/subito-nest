@@ -22,7 +22,7 @@ export class EmployerController {
   }
 
   @Get(':id')
-  getEmployer(@Param('id') id) {
+  getEmployer(@Param('id') id: string) {
     return this.service.findOne(id);
   }
 
