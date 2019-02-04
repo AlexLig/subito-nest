@@ -2,3 +2,5 @@
 [2019-02-04T19:12:10.840Z][QUERY ERROR]: error: null value in column "ame" violates not-null constraint
 [2019-02-04T19:13:04.596Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame") VALUES ($1, $2, DEFAULT) RETURNING "id" -- PARAMETERS: ["Subito","123123321"]
 [2019-02-04T19:13:04.596Z][QUERY ERROR]: error: null value in column "ame" violates not-null constraint
+[2019-02-04T22:11:56.307Z]new columns added: employerId
+[2019-02-04T22:11:56.336Z]creating a foreign keys: FK_878fb2064797fa5a13c9c513816 on table "employee"

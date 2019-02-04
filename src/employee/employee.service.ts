@@ -3,7 +3,7 @@ import { Employee } from './employee.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateEmployeeDto } from './dtos/create-employee.dto';
-import { notFoundException } from 'src/shared/HttpExceptions';
+import { notFoundException, employerErrors, employeeErrors } from 'src/shared';
 import { Employer } from 'src/employer/employer.entity';
 
 @Injectable()
@@ -15,11 +15,11 @@ export class EmployeeService {
     private readonly employerRepository: Repository<Employer>,
   ) {}
 
+  // * POST
   async create(createEmployeeDto: CreateEmployeeDto) {
     const { employerId } = createEmployeeDto;
-
     const employer = await this.employerRepository.findOne(employerId);
-    notFoundException(employer, 'Employer with given Id was not found');
+    notFoundException(employer, employerErrors.NOT_FOUND);
 
     const employeeToCreate = { ...createEmployeeDto, employer };
     const employee = this.employeeRepository.create(employeeToCreate);
@@ -27,45 +27,49 @@ export class EmployeeService {
     return await this.employeeRepository.save(employee);
   }
 
-  async findAll() {
+  // * GET
+  async findAll(): Promise<Employee[]> {
     return await this.employeeRepository.find();
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<Employee> {
     const employee = await this.employeeRepository.findOne(id);
-    notFoundException(employee);
+    notFoundException(employee, employeeErrors.NOT_FOUND);
+
     return employee;
   }
 
-  async findByIdAndUpdate(
-    id: string,
-    createEmployeeDto: Partial<CreateEmployeeDto>,
-  ) {
-    const employeeToUpdate = await this.employeeRepository.findOne(id);
-    notFoundException(employeeToUpdate);
+  async findByEmployerId(id: string) {
+    const employer = await this.employerRepository.findOne(id);
+    notFoundException(employer, employerErrors.NOT_FOUND);
 
-    const { employerId } = createEmployeeDto;
-    if (employerId) {
-      const employer = await this.employerRepository.findOne(employerId);
-      notFoundException(employer, 'Employer with given Id was not found');
-      const updated: Employee = {
-        ...employeeToUpdate,
-        ...createEmployeeDto,
-        employer,
-      };
-      return await this.employeeRepository.save(updated);
-    } else {
-      const updated: Employee = {
-        ...employeeToUpdate,
-        ...createEmployeeDto,
-      };
-      return await this.employeeRepository.save(updated);
-    }
+    return this.employeeRepository.find({ employer });
   }
 
+  // * PUT
+  async findByIdAndUpdate(id: string, employeeDto: Partial<CreateEmployeeDto>) {
+    const employeeToUpdate = await this.employeeRepository.findOne(id);
+    notFoundException(employeeToUpdate, employeeErrors.NOT_FOUND);
+
+    const updated: Employee = { ...employeeToUpdate, ...employeeDto };
+    const { employerId } = employeeDto;
+
+    if (employerId) {
+      const employer = await this.employerRepository.findOne(employerId);
+      notFoundException(employer, employerErrors.NOT_FOUND);
+      const updatedWithEmployer: Employee = { ...updated, employer };
+
+      return await this.employeeRepository.save(updatedWithEmployer);
+    }
+
+    return await this.employeeRepository.save(updated);
+  }
+
+  // * DELETE
   async findByIdAndDelete(id: string) {
     const employeeToDelete = await this.employeeRepository.findOne(id);
-    notFoundException(employeeToDelete);
+    notFoundException(employeeToDelete, employeeErrors.NOT_FOUND);
+
     return await this.employeeRepository.remove(employeeToDelete);
   }
 }
