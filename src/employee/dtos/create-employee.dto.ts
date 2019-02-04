@@ -13,4 +13,8 @@ export class CreateEmployeeDto {
   @IsAlphanumeric({ message: 'Εισάγετε μόνο από αριθμούς' })
   @Length(9, 9, { message: 'Ο ΑΦΜ αποτελείται από 9 αριθμούς' })
   readonly vat: string;
+
+  @IsNumberString({ message: 'Εισάγετε μόνο από αριθμούς' })
+  @IsAlphanumeric({ message: 'Εισάγετε μόνο από αριθμούς' })
+  readonly employerId: string;
 }
