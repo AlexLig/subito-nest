@@ -9,8 +9,14 @@ export class Employee {
   @Column({ length: 500 })
   name: string;
 
-  @Column({ length: 9 })
+  @Column({ width: 9 })
   vat: string;
+
+  @Column('time')
+  startWork: string;
+
+  @Column('time')
+  endWork: string;
 
   @ManyToOne(type => Employer, employer => employer.employees)
   employer: Employer;

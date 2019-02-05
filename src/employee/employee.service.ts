@@ -24,7 +24,9 @@ export class EmployeeService {
     const { employerId, vat } = employeeDto;
 
     const duplicate = await this.repository.findOne({ vat });
-    duplicateException(duplicate, employeeErrors.VAT_MUST_BE_UNIQUE);
+    if (duplicate) {
+      throw duplicateException(employeeErrors.VAT_MUST_BE_UNIQUE);
+    }
 
     const employer = await this.employerService.findById(employerId);
     const employeeToCreate = { ...employeeDto, employer };
@@ -40,7 +42,9 @@ export class EmployeeService {
 
   async findById(id: string): Promise<Employee> {
     const employee = await this.repository.findOne(id);
-    notFoundException(employee, employeeErrors.NOT_FOUND);
+    if (!employee) {
+      throw notFoundException(employeeErrors.NOT_FOUND);
+    }
 
     return employee;
   }
@@ -55,7 +59,7 @@ export class EmployeeService {
     if (vat) {
       const duplicate = await this.repository.findOne({ vat });
       if (duplicate && duplicate.id.toString() !== id) {
-        duplicateException(duplicate, employeeErrors.VAT_MUST_BE_UNIQUE);
+        throw duplicateException(employeeErrors.VAT_MUST_BE_UNIQUE);
       }
     }
 
