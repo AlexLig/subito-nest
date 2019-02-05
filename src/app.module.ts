@@ -8,6 +8,7 @@ import { Connection } from 'typeorm';
 
 @Module({
   imports: [EmployeeModule, EmployerModule, TypeOrmModule.forRoot()],
+  // * To make a service injectable to other services, make it available by providing them here and at the module they are used.
   providers: [EmployerService],
   controllers: [EmployerController],
 })

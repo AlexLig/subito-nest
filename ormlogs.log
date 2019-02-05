@@ -6,3 +6,5 @@
 [2019-02-04T22:11:56.336Z]creating a foreign keys: FK_878fb2064797fa5a13c9c513816 on table "employee"
 [2019-02-04T23:07:54.348Z][FAILED QUERY]: DELETE FROM "employer" WHERE "id" = $1 -- PARAMETERS: [4]
 [2019-02-04T23:07:54.348Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
+[2019-02-05T03:20:59.520Z][FAILED QUERY]: DELETE FROM "employer" WHERE "id" = $1 -- PARAMETERS: [4]
+[2019-02-05T03:20:59.520Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
