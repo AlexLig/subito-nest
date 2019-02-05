@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Employer } from './employer.entity';
 import { CreateEmployerDto } from './dto/createEmployer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,20 +17,26 @@ export class EmployerService {
   async findAll(): Promise<Employer[]> {
     const employers = await this.repository.find();
     // TODO: Throw exception or handle empty array on the front end?
-    notFoundException(employers[0]);
+    // notFoundException(employers[0]);
 
     return employers;
   }
   async findById(id: string): Promise<Employer> {
     const employer = await this.repository.findOne(id);
-    notFoundException(employer, employerErrors.NOT_FOUND);
+    if (!employer) {
+      throw notFoundException(employerErrors.NOT_FOUND);
+    }
 
     return employer;
   }
 
   // * POST
   async create(employerInfo: CreateEmployerDto): Promise<Employer> {
-    return await this.repository.save(employerInfo);
+    try {
+      return await this.repository.save(employerInfo);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
   }
 
   // * PUT
@@ -40,8 +46,11 @@ export class EmployerService {
   ): Promise<Employer> {
     const employerToUpdate = await this.findById(id);
     const updated = { ...employerToUpdate, ...employerDto };
-
-    return await this.repository.save(updated);
+    try {
+      return await this.repository.save(updated);
+    } catch (e) {
+      throw e;
+    }
   }
 
   // * DELETE
