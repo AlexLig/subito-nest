@@ -3,7 +3,7 @@ const errorGenerator = {
 };
 
 export const generalErrors = {
-  NOT_FOUND: errorGenerator.not_found('αποτέλεσμα'),
+  NOT_FOUND: 'Δεν βρέθηκαν αποτελέσματα.',
   INSERT_ONLY_NUMBERS: 'Εισάγετε μόνο αριθμούς.',
   VAT_LENGTH: 'Ο ΑΦΜ αποτελείται από 9 αριθμούς.',
   AME_LENGTH: 'Ο ΑΜΕ αποτελείται από 10 αριθμούς.',

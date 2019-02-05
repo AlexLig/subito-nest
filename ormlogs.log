@@ -8,3 +8,20 @@
 [2019-02-04T23:07:54.348Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
 [2019-02-05T03:20:59.520Z][FAILED QUERY]: DELETE FROM "employer" WHERE "id" = $1 -- PARAMETERS: [4]
 [2019-02-05T03:20:59.520Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
+[2019-02-05T20:58:29.317Z]creating a new table: employer
+[2019-02-05T20:58:29.369Z]creating a new table: employee
+[2019-02-05T20:58:29.391Z]creating a foreign keys: FK_878fb2064797fa5a13c9c513816 on table "employee"
+[2019-02-05T21:05:11.280Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame") VALUES ($1, $2, DEFAULT) RETURNING "id" -- PARAMETERS: ["subito AE","132245678"]
+[2019-02-05T21:05:11.280Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"
+[2019-02-05T21:10:08.720Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame") VALUES ($1, $2, DEFAULT) RETURNING "id" -- PARAMETERS: ["subito AE","222222222"]
+[2019-02-05T21:10:08.720Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"
+[2019-02-05T21:11:52.070Z][FAILED QUERY]: UPDATE "employer" SET "name" = $2, "vat" = $3 WHERE "id" IN ($1) -- PARAMETERS: [3,"subito Updated AE","222222222"]
+[2019-02-05T21:11:52.070Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"
+[2019-02-05T21:16:43.992Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame") VALUES ($1, $2, DEFAULT) RETURNING "id" -- PARAMETERS: ["subito AE","222222222"]
+[2019-02-05T21:16:43.992Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"
+[2019-02-05T21:17:07.168Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame") VALUES ($1, $2, DEFAULT) RETURNING "id" -- PARAMETERS: ["subito AE","222222222"]
+[2019-02-05T21:17:07.168Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"
+[2019-02-05T21:19:45.209Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame") VALUES ($1, $2, DEFAULT) RETURNING "id" -- PARAMETERS: ["subito AE","222222222"]
+[2019-02-05T21:19:45.209Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"
+[2019-02-05T21:22:39.538Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame") VALUES ($1, $2, DEFAULT) RETURNING "id" -- PARAMETERS: ["subito AE","222222222"]
+[2019-02-05T21:22:39.538Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"

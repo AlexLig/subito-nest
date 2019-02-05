@@ -8,11 +8,11 @@ export class Employer {
 
   @Column()
   name: string;
-
-  @Column('varchar', { length: 9 })
+// TODO Try catch onSave onUpdate app crashes because unique
+  @Column('varchar', { length: 9, unique: true })
   vat: string;
 
-  @Column()
+  @Column('varchar', { length: 10, nullable: true })
   ame?: string;
 
   @OneToMany(type => Employee, employee => employee.employer, {
