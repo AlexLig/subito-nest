@@ -22,11 +22,11 @@ export class EmployeeService {
   // * POST
   async create(employeeDto: CreateEmployeeDto): Promise<Employee> {
     const { employerId, vat } = employeeDto;
-    const employer = await this.employerService.findById(employerId);
 
     const duplicate = await this.repository.findOne({ vat });
     duplicateException(duplicate, employeeErrors.VAT_MUST_BE_UNIQUE);
 
+    const employer = await this.employerService.findById(employerId);
     const employeeToCreate = { ...employeeDto, employer };
     const newEmployee = this.repository.create(employeeToCreate);
 
