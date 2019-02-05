@@ -3,6 +3,8 @@ import { Employer } from './employer.entity';
 import { CreateEmployerDto } from './dto/createEmployer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { notFoundException } from 'src/shared/HttpExceptions';
+import { employerErrors } from 'src/shared';
 
 @Injectable()
 export class EmployerService {
@@ -11,27 +13,41 @@ export class EmployerService {
     private readonly repository: Repository<Employer>,
   ) {}
 
-  // GET
+  // * GET
   async findAll(): Promise<Employer[]> {
-    return await this.repository.find();
+    const employers = await this.repository.find();
+    // TODO: Throw exception or handle empty array on the front end?
+    notFoundException(employers[0]);
+
+    return employers;
   }
-  async findOne(id: string) {
-    return await this.repository.findOne(id);
+  async findById(id: string): Promise<Employer> {
+    const employer = await this.repository.findOne(id);
+    notFoundException(employer, employerErrors.NOT_FOUND);
+
+    return employer;
   }
 
-  // PUT
+  // * POST
   async create(employerInfo: CreateEmployerDto): Promise<Employer> {
     return await this.repository.save(employerInfo);
   }
 
-  // POST
-  async update(id: string, employer: CreateEmployerDto) {
-    await this.repository.update(id, employer);
-    return await this.repository.findOne(id);
+  // * PUT
+  async update(
+    id: string,
+    employerDto: Partial<CreateEmployerDto>,
+  ): Promise<Employer> {
+    const employerToUpdate = await this.findById(id);
+    const updated = { ...employerToUpdate, ...employerDto };
+
+    return await this.repository.save(updated);
   }
 
-  // DELETE
-  async delete(id: string) {
-    return await this.repository.delete(id);
+  // * DELETE
+  async delete(id: string): Promise<Employer> {
+    const employerToDelete = await this.findById(id);
+
+    return await this.repository.remove(employerToDelete);
   }
 }
