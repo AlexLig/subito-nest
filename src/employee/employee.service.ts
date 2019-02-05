@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { CreateEmployeeDto } from './dtos/create-employee.dto';
 import {
   notFoundException,
-  employerErrors,
   employeeErrors,
   duplicateException,
 } from 'src/shared';
@@ -21,19 +20,17 @@ export class EmployeeService {
   ) {}
 
   // * POST
-  async create(employeeDto: CreateEmployeeDto) {
-    const { employerId } = employeeDto;
+  async create(employeeDto: CreateEmployeeDto): Promise<Employee> {
+    const { employerId, vat } = employeeDto;
     const employer = await this.employerService.findById(employerId);
 
-    const duplicate = await this.repository.findOne({
-      vat: employeeDto.vat,
-    });
+    const duplicate = await this.repository.findOne({ vat });
     duplicateException(duplicate, employeeErrors.VAT_MUST_BE_UNIQUE);
 
     const employeeToCreate = { ...employeeDto, employer };
-    const employee = this.repository.create(employeeToCreate);
+    const newEmployee = this.repository.create(employeeToCreate);
 
-    return await this.repository.save(employee);
+    return await this.repository.save(newEmployee);
   }
 
   // * GET
@@ -48,29 +45,21 @@ export class EmployeeService {
     return employee;
   }
 
-  // async findByEmployerId(id: string) {
-  //   const employer = await this.employerRepository.findOne(id);
-  //   notFoundException(employer, employerErrors.NOT_FOUND);
-
-  //   return this.employeeRepository.find({ employer });
-  // }
-
   // * PUT
   async findByIdAndUpdate(id: string, employeeDto: Partial<CreateEmployeeDto>) {
     const employeeToUpdate = await this.findById(id);
     let updated: Employee = { ...employeeToUpdate, ...employeeDto };
 
-    const { employerId } = employeeDto;
-    if (employerId) {
-      const employer = await this.employerService.findById(employerId);
+    const { employerId: empId } = employeeDto;
+    if (empId) {
+      const employer: Employer = await this.employerService.findById(empId);
       updated = { ...updated, employer };
     }
-
     return await this.repository.save(updated);
   }
 
   // * DELETE
-  async findByIdAndDelete(id: string) {
+  async findByIdAndDelete(id: string): Promise<Employee> {
     const employeeToDelete = await this.findById(id);
 
     return await this.repository.remove(employeeToDelete);
