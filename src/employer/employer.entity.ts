@@ -15,8 +15,6 @@ export class Employer {
   @Column('varchar', { length: 10, nullable: true })
   ame?: string;
 
-  @OneToMany(type => Employee, employee => employee.employer, {
-    eager: true,
-  })
+  @OneToMany(type => Employee, employee => employee.employer)
   employees: Employee[];
 }
