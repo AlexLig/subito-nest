@@ -13,5 +13,6 @@ export const employerErrors = {
 };
 export const employeeErrors = {
   NOT_FOUND: errorGenerator.not_found('υπάλληλος'),
+  VAT_MUST_BE_UNIQUE: 'Αυτός ο ΑΦΜ χρησιμοποιείται ήδη',
   EMPTY_EMPLOYEE_LIST: 'Δεν βρέθηκαν υπάλληλοι για αυτόν τον εργοδότη',
 };

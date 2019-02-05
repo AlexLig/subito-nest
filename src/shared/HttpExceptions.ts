@@ -7,3 +7,10 @@ export const notFoundException = (value: any, message = e.NOT_FOUND) => {
     throw new HttpException(message, HttpStatus.NOT_FOUND);
   }
 };
+
+/** Throws a 409 Conflict Http exception if the value exists. */
+export const duplicateException = (value: any, message: string) => {
+  if (value) {
+    throw new HttpException(message, HttpStatus.CONFLICT);
+  }
+};

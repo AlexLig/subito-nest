@@ -3,7 +3,12 @@ import { Employee } from './employee.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateEmployeeDto } from './dtos/create-employee.dto';
-import { notFoundException, employerErrors, employeeErrors } from 'src/shared';
+import {
+  notFoundException,
+  employerErrors,
+  employeeErrors,
+  duplicateException,
+} from 'src/shared';
 import { Employer } from 'src/employer/employer.entity';
 
 @Injectable()
@@ -16,12 +21,15 @@ export class EmployeeService {
   ) {}
 
   // * POST
-  async create(createEmployeeDto: CreateEmployeeDto) {
-    const { employerId } = createEmployeeDto;
+  async create(employeeDto: CreateEmployeeDto) {
+    const { employerId } = employeeDto;
     const employer = await this.employerRepository.findOne(employerId);
     notFoundException(employer, employerErrors.NOT_FOUND);
 
-    const employeeToCreate = { ...createEmployeeDto, employer };
+    const duplicate = this.employeeRepository.findOne({ vat: employeeDto.vat });
+    duplicateException(duplicate, employeeErrors.VAT_MUST_BE_UNIQUE);
+
+    const employeeToCreate = { ...employeeDto, employer };
     const employee = this.employeeRepository.create(employeeToCreate);
 
     return await this.employeeRepository.save(employee);
@@ -39,17 +47,16 @@ export class EmployeeService {
     return employee;
   }
 
-  async findByEmployerId(id: string) {
-    const employer = await this.employerRepository.findOne(id);
-    notFoundException(employer, employerErrors.NOT_FOUND);
+  // async findByEmployerId(id: string) {
+  //   const employer = await this.employerRepository.findOne(id);
+  //   notFoundException(employer, employerErrors.NOT_FOUND);
 
-    return this.employeeRepository.find({ employer });
-  }
+  //   return this.employeeRepository.find({ employer });
+  // }
 
   // * PUT
   async findByIdAndUpdate(id: string, employeeDto: Partial<CreateEmployeeDto>) {
-    const employeeToUpdate = await this.employeeRepository.findOne(id);
-    notFoundException(employeeToUpdate, employeeErrors.NOT_FOUND);
+    const employeeToUpdate = await this.findById(id);
 
     const updated: Employee = { ...employeeToUpdate, ...employeeDto };
     const { employerId } = employeeDto;
@@ -67,8 +74,7 @@ export class EmployeeService {
 
   // * DELETE
   async findByIdAndDelete(id: string) {
-    const employeeToDelete = await this.employeeRepository.findOne(id);
-    notFoundException(employeeToDelete, employeeErrors.NOT_FOUND);
+    const employeeToDelete = await this.findById(id);
 
     return await this.employeeRepository.remove(employeeToDelete);
   }
