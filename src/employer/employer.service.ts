@@ -4,7 +4,7 @@ import { CreateEmployerDto } from './dto/createEmployer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { notFoundException } from 'src/shared/HttpExceptions';
-import { employerErrors } from 'src/shared';
+import { employerErrors, generalErrors } from 'src/shared';
 
 @Injectable()
 export class EmployerService {
@@ -16,26 +16,32 @@ export class EmployerService {
   // * GET
   async findAll(): Promise<Employer[]> {
     const employers = await this.repository.find();
-    // TODO: Throw exception or handle empty array on the front end?
-    // notFoundException(employers[0]);
+    if (employers.length < 1) throw notFoundException();
 
     return employers;
   }
-  async findById(id: string): Promise<Employer> {
-    const employer = await this.repository.findOne(id);
-    if (!employer) {
-      throw notFoundException(employerErrors.NOT_FOUND);
-    }
+
+  async findById(id: string, getAll = false): Promise<Employer> {
+    const employer = await this.repository.findOne(
+      id,
+      getAll && { relations: ['employees'] },
+    );
+    if (!employer) throw notFoundException(employerErrors.NOT_FOUND);
 
     return employer;
   }
 
   // * POST
   async create(employerInfo: CreateEmployerDto): Promise<Employer> {
+    const { ame } = employerInfo;
+    if (ame && ame.length !== 10) {
+      throw new HttpException(generalErrors.AME_LENGTH, HttpStatus.BAD_REQUEST);
+    }
+
     try {
       return await this.repository.save(employerInfo);
     } catch (e) {
-      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -46,10 +52,11 @@ export class EmployerService {
   ): Promise<Employer> {
     const employerToUpdate = await this.findById(id);
     const updated = { ...employerToUpdate, ...employerDto };
+
     try {
       return await this.repository.save(updated);
     } catch (e) {
-      throw e;
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
