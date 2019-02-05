@@ -25,3 +25,5 @@
 [2019-02-05T21:19:45.209Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"
 [2019-02-05T21:22:39.538Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame") VALUES ($1, $2, DEFAULT) RETURNING "id" -- PARAMETERS: ["subito AE","222222222"]
 [2019-02-05T21:22:39.538Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"
+[2019-02-05T22:28:10.575Z]new columns added: startWork, endWork
+[2019-02-05T22:28:10.583Z]columns changed in "employee". updating: vat
