@@ -6,20 +6,21 @@ import {
   IsAlphanumeric,
   Length,
 } from 'class-validator';
+import { generalErrors as e } from '../../shared';
 
 export class CreateEmployerDto {
   @IsString()
-  @MaxLength(255, { message: 'Εισάγετε λιγότερους χαρακτήρες' })
+  @MaxLength(255, { message: e.TOO_MANY_CHARACTERS })
   readonly name: string;
 
-  @IsNumberString({ message: 'Εισάγετε μόνο από αριθμούς' })
-  @IsAlphanumeric({ message: 'Εισάγετε μόνο από αριθμούς' })
-  @Length(9, 9, { message: 'Ο ΑΦΜ αποτελείται από 9 αριθμούς' })
+  @IsNumberString({ message: e.INSERT_ONLY_NUMBERS })
+  @IsAlphanumeric({ message: e.INSERT_ONLY_NUMBERS })
+  @Length(9, 9, { message: e.VAT_LENGTH })
   readonly vat: string;
 
   @IsOptional()
-  @IsNumberString({ message: 'Εισάγετε μόνο από αριθμούς' })
-  @IsAlphanumeric({ message: 'Εισάγετε μόνο από αριθμούς' })
-  @Length(10, 10, { message: 'Ο ΑΜΕ αποτελείται από 10 αριθμούς' })
+  @IsNumberString({ message: e.INSERT_ONLY_NUMBERS })
+  @IsAlphanumeric({ message: e.INSERT_ONLY_NUMBERS })
+  @Length(10, 10, { message: e.AME_LENGTH })
   readonly ame?: string;
 }

@@ -7,6 +7,7 @@ export const generalErrors = {
   INSERT_ONLY_NUMBERS: 'Εισάγετε μόνο αριθμούς.',
   VAT_LENGTH: 'Ο ΑΦΜ αποτελείται από 9 αριθμούς.',
   AME_LENGTH: 'Ο ΑΜΕ αποτελείται από 10 αριθμούς.',
+  TOO_MANY_CHARACTERS: 'Εισάγετε λιγότερους χαρακτήρες.',
 };
 export const employerErrors = {
   NOT_FOUND: errorGenerator.not_found('εργοδότης'),
