@@ -3,19 +3,19 @@ import { HttpException } from '@nestjs/common';
 import { databaseWriteException } from 'src/shared';
 import { repositories as r } from '../shared';
 
-type properties = 'vat' | 'ame';
+type Properties = 'vat' | 'ame';
 
-const isDuplicate = (property: properties) => (repository: string) => async (
+const isDuplicate = (property: Properties) => (repository: string) => async (
   req: any,
   res: any,
   next: any,
 ) => {
-  const value = req.body[property];
-  let duplicate;
-
   if (repository !== r.EMPLOYEE && repository !== r.EMPLOYER) {
     throw new HttpException('Wrong repository', 400);
   }
+
+  const value = req.body[property];
+  let duplicate;
 
   try {
     // ! If property doesnt exist for this Entity, the repo returns the first row in the table.
