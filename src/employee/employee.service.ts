@@ -8,6 +8,7 @@ import {
   employeeErrors,
   duplicateException,
   generalErrors,
+  serverErrorException,
 } from 'src/shared';
 import { Employer } from 'src/employer/employer.entity';
 import { EmployerService } from 'src/employer/employer.service';
@@ -35,7 +36,7 @@ export class EmployeeService {
     try {
       return await this.repository.save(employeeToCreate);
     } catch (e) {
-      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw serverErrorException(e);
     }
   }
 
@@ -75,7 +76,7 @@ export class EmployeeService {
     try {
       return await this.repository.save(updated);
     } catch (e) {
-      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw serverErrorException(e);
     }
   }
 
@@ -86,7 +87,7 @@ export class EmployeeService {
     try {
       return await this.repository.remove(employeeToDelete);
     } catch (e) {
-      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw serverErrorException(e);
     }
   }
 }
