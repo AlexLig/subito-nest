@@ -6,7 +6,7 @@ import {
   IsAlphanumeric,
   Length,
 } from 'class-validator';
-import { generalErrors as e } from '../../shared';
+import { generalErrors as e } from '../shared';
 
 export class CreateEmployerDto {
   @IsString()

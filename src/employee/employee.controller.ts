@@ -9,7 +9,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
-import { CreateEmployeeDto } from './dtos/create-employee.dto';
+import { CreateEmployeeDto } from './employee.dto';
 import { Employee } from './employee.entity';
 
 @Controller('/api/employee')

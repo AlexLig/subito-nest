@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { EmployerService } from './employer.service';
-import { CreateEmployerDto } from './dto/createEmployer.dto';
+import { CreateEmployerDto } from './employer.dto';
 
 @Controller('/api/employer')
 export class EmployerController {

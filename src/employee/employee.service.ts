@@ -2,7 +2,7 @@ import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Employee } from './employee.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateEmployeeDto } from './dtos/create-employee.dto';
+import { CreateEmployeeDto } from './employee.dto';
 import {
   notFoundException,
   employeeErrors,
