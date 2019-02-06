@@ -9,7 +9,7 @@ export class Employee {
   @Column({ length: 500 })
   name: string;
 
-  @Column({ width: 9 })
+  @Column({ length: 9, unique: true })
   vat: string;
 
   @Column('time')

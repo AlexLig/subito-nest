@@ -8,7 +8,8 @@
     "target": "es6",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "lib": ["dom", "esnext"]
   },
   "exclude": ["node_modules"]
 }
