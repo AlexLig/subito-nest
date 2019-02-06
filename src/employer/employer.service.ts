@@ -26,6 +26,7 @@ export class EmployerService {
       id,
       getAll && { relations: ['employees'] },
     );
+
     if (!employer) throw notFoundException(employerErrors.NOT_FOUND);
 
     return employer;
