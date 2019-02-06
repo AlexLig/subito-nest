@@ -27,3 +27,38 @@
 [2019-02-05T21:22:39.538Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"
 [2019-02-05T22:28:10.575Z]new columns added: startWork, endWork
 [2019-02-05T22:28:10.583Z]columns changed in "employee". updating: vat
+[2019-02-06T02:49:54.750Z][FAILED QUERY]: DELETE FROM "employer" WHERE "id" = $1 -- PARAMETERS: [1]
+[2019-02-06T02:49:54.750Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
+[2019-02-06T03:14:53.498Z][FAILED QUERY]: DELETE FROM "employer" WHERE "id" = $1 -- PARAMETERS: [1]
+[2019-02-06T03:14:53.498Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
+[2019-02-06T03:15:16.753Z][FAILED QUERY]: DELETE FROM "employer" WHERE "id" = $1 -- PARAMETERS: [1]
+[2019-02-06T03:15:16.753Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
+[2019-02-06T03:16:45.378Z][FAILED QUERY]: DELETE FROM "employer" WHERE "id" = $1 -- PARAMETERS: [1]
+[2019-02-06T03:16:45.378Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
+[2019-02-06T03:17:18.060Z][FAILED QUERY]: DELETE FROM "employer" WHERE "id" = $1 -- PARAMETERS: [1]
+[2019-02-06T03:17:18.060Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
+[2019-02-06T03:28:27.485Z][FAILED QUERY]: DELETE FROM "employer" WHERE "id" = $1 -- PARAMETERS: [1]
+[2019-02-06T03:28:27.485Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
+[2019-02-06T03:32:22.073Z]new columns added: employeesId
+[2019-02-06T03:32:22.101Z]creating a foreign keys: FK_aa1d4034a21a0eee702d5fd99fa on table "employer"
+[2019-02-06T03:32:34.670Z]dropping old foreign keys of employee: FK_878fb2064797fa5a13c9c513816
+[2019-02-06T03:32:34.702Z]columns dropped in employee: employerId
+[2019-02-06T03:33:47.282Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame", "employeesId") VALUES ($1, $2, $3, DEFAULT) RETURNING "id" -- PARAMETERS: ["Subito","123123321","1234567890"]
+[2019-02-06T03:33:47.282Z][QUERY ERROR]: error: duplicate key value violates unique constraint "UQ_da17664a8debdfa87ccd0f0e147"
+[2019-02-06T03:37:19.036Z]new columns added: employerId
+[2019-02-06T03:37:19.054Z]creating a foreign keys: FK_878fb2064797fa5a13c9c513816 on table "employee"
+[2019-02-06T03:37:25.484Z]dropping old foreign keys of employer: FK_aa1d4034a21a0eee702d5fd99fa
+[2019-02-06T03:37:25.499Z]columns dropped in employer: employeesId
+[2019-02-06T03:38:19.115Z][FAILED QUERY]: SELECT "Employee"."id" AS "Employee_id", "Employee"."name" AS "Employee_name", "Employee"."vat" AS "Employee_vat", "Employee"."startWork" AS "Employee_startWork", "Employee"."endWork" AS "Employee_endWork", "Employee"."employerId" AS "Employee_employerId" FROM "employee" "Employee" WHERE "Employee"."vat" = $1 LIMIT 1 -- PARAMETERS: ["000000117"]
+[2019-02-06T03:38:19.115Z][QUERY ERROR]: error: relation "employee" does not exist
+[2019-02-06T03:38:28.915Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame") VALUES ($1, $2, $3) RETURNING "id" -- PARAMETERS: ["Subito","123123322","1234567890"]
+[2019-02-06T03:38:28.915Z][QUERY ERROR]: error: relation "employer" does not exist
+[2019-02-06T03:38:47.465Z][FAILED QUERY]: INSERT INTO "employer"("name", "vat", "ame") VALUES ($1, $2, $3) RETURNING "id" -- PARAMETERS: ["Subito","123123322","1234567890"]
+[2019-02-06T03:38:47.465Z][QUERY ERROR]: error: relation "employer" does not exist
+[2019-02-06T03:39:22.238Z]creating a new table: employer
+[2019-02-06T03:39:22.276Z]creating a new table: employee
+[2019-02-06T03:39:22.311Z]creating a foreign keys: FK_878fb2064797fa5a13c9c513816 on table "employee"
+[2019-02-06T03:41:53.256Z][FAILED QUERY]: DELETE FROM "employer" WHERE "id" = $1 -- PARAMETERS: [1]
+[2019-02-06T03:41:53.256Z][QUERY ERROR]: error: update or delete on table "employer" violates foreign key constraint "FK_878fb2064797fa5a13c9c513816" on table "employee"
+[2019-02-06T03:42:28.419Z]dropping old foreign keys of employee: FK_878fb2064797fa5a13c9c513816
+[2019-02-06T03:42:28.438Z]creating a foreign keys: FK_878fb2064797fa5a13c9c513816 on table "employee"

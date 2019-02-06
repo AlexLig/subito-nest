@@ -18,6 +18,8 @@ export class Employee {
   @Column('time')
   endWork: string;
 
-  @ManyToOne(type => Employer, employer => employer.employees)
+  @ManyToOne(type => Employer, employer => employer.employees, {
+    onDelete: 'CASCADE',
+  })
   employer: Employer;
 }
