@@ -8,7 +8,7 @@ export class Employer {
 
   @Column()
   name: string;
-// TODO Try catch onSave onUpdate app crashes because unique
+  // TODO Try catch onSave onUpdate app crashes because unique
   @Column('varchar', { length: 9, unique: true })
   vat: string;
 

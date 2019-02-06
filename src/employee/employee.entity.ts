@@ -9,7 +9,7 @@ export class Employee {
   @Column({ length: 500 })
   name: string;
 
-  @Column({ width: 9 })
+  @Column({ length: 9, unique: true })
   vat: string;
 
   @Column('time')
@@ -18,6 +18,8 @@ export class Employee {
   @Column('time')
   endWork: string;
 
-  @ManyToOne(type => Employer, employer => employer.employees)
+  @ManyToOne(type => Employer, employer => employer.employees, {
+    onDelete: 'CASCADE',
+  })
   employer: Employer;
 }

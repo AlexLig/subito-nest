@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Employee } from './employee.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,7 +16,7 @@ import { EmployerService } from 'src/employer/employer.service';
 export class EmployeeService {
   constructor(
     @InjectRepository(Employee)
-    private readonly repository: Repository<Employee>,
+    private readonly employeeRepository: Repository<Employee>,
     private readonly employerService: EmployerService,
   ) {}
 
@@ -24,25 +24,29 @@ export class EmployeeService {
   async create(employeeDto: CreateEmployeeDto): Promise<Employee> {
     const { employerId, vat } = employeeDto;
 
-    const duplicate = await this.repository.findOne({ vat });
+    const duplicate = await this.employeeRepository.findOne({ vat });
     if (duplicate) {
       throw duplicateException(generalErrors.VAT_MUST_BE_UNIQUE);
     }
 
     const employer = await this.employerService.findById(employerId);
     const employeeToCreate = { ...employeeDto, employer };
-    const newEmployee = await this.repository.create(employeeToCreate);
+    const newEmployee = await this.employeeRepository.create(employeeToCreate);
 
-    return await this.repository.save(newEmployee);
+    try {
+      return await this.employeeRepository.save(newEmployee);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   // * GET
   async findAll(): Promise<Employee[]> {
-    return await this.repository.find();
+    return await this.employeeRepository.find();
   }
 
   async findById(id: string): Promise<Employee> {
-    const employee = await this.repository.findOne(id);
+    const employee = await this.employeeRepository.findOne(id);
     if (!employee) {
       throw notFoundException(employeeErrors.NOT_FOUND);
     }
@@ -58,7 +62,7 @@ export class EmployeeService {
     const { employerId: empId, vat } = employeeDto;
 
     if (vat) {
-      const duplicate = await this.repository.findOne({ vat });
+      const duplicate = await this.employeeRepository.findOne({ vat });
       if (duplicate && duplicate.id.toString() !== id) {
         throw duplicateException(generalErrors.VAT_MUST_BE_UNIQUE);
       }
@@ -68,13 +72,22 @@ export class EmployeeService {
       const employer: Employer = await this.employerService.findById(empId);
       updated = { ...updated, employer };
     }
-    return await this.repository.save(updated);
+
+    try {
+      return await this.employeeRepository.save(updated);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   // * DELETE
   async findByIdAndDelete(id: string): Promise<Employee> {
     const employeeToDelete = await this.findById(id);
 
-    return await this.repository.remove(employeeToDelete);
+    try {
+      return await this.employeeRepository.remove(employeeToDelete);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
