@@ -56,6 +56,13 @@ export class EmployerService {
   ): Promise<Employer> {
     const employerToUpdate = await this.findById(id);
     const updated = { ...employerToUpdate, ...employerDto };
+    const { vat } = employerDto;
+    if (vat) {
+      const duplicate = await this.repository.findOne({ vat });
+      if (duplicate && duplicate.id.toString() !== id) {
+        throw duplicateException(generalErrors.VAT_MUST_BE_UNIQUE);
+      }
+    }
 
     try {
       return await this.repository.save(updated);
@@ -68,6 +75,10 @@ export class EmployerService {
   async delete(id: string): Promise<Employer> {
     const employerToDelete = await this.findById(id);
 
-    return await this.repository.remove(employerToDelete);
+    try {
+      return await this.repository.remove(employerToDelete);
+    } catch (e) {
+      throw serverErrorException(e);
+    }
   }
 }
