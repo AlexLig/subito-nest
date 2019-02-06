@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Employee } from './employee.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -32,7 +32,11 @@ export class EmployeeService {
     const employeeToCreate = { ...employeeDto, employer };
     const newEmployee = await this.employeeRepository.create(employeeToCreate);
 
-    return await this.employeeRepository.save(newEmployee);
+    try {
+      return await this.employeeRepository.save(newEmployee);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   // * GET
@@ -67,13 +71,22 @@ export class EmployeeService {
       const employer: Employer = await this.employerService.findById(empId);
       updated = { ...updated, employer };
     }
-    return await this.employeeRepository.save(updated);
+
+    try {
+      return await this.employeeRepository.save(updated);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   // * DELETE
   async findByIdAndDelete(id: string): Promise<Employee> {
     const employeeToDelete = await this.findById(id);
 
-    return await this.employeeRepository.remove(employeeToDelete);
+    try {
+      return await this.employeeRepository.remove(employeeToDelete);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
