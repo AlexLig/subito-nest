@@ -16,7 +16,7 @@ import { EmployerService } from 'src/employer/employer.service';
 export class EmployeeService {
   constructor(
     @InjectRepository(Employee)
-    private readonly employeeRepository: Repository<Employee>,
+    private readonly repository: Repository<Employee>,
     private readonly employerService: EmployerService,
   ) {}
 
@@ -24,17 +24,16 @@ export class EmployeeService {
   async create(employeeDto: CreateEmployeeDto): Promise<Employee> {
     const { employerId, vat } = employeeDto;
 
-    const duplicate = await this.employeeRepository.findOne({ vat });
+    const duplicate = await this.repository.findOne({ vat });
     if (duplicate) {
       throw duplicateException(generalErrors.VAT_MUST_BE_UNIQUE);
     }
 
     const employer = await this.employerService.findById(employerId);
     const employeeToCreate = { ...employeeDto, employer };
-    const newEmployee = await this.employeeRepository.create(employeeToCreate);
 
     try {
-      return await this.employeeRepository.save(newEmployee);
+      return await this.repository.save(employeeToCreate);
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -42,11 +41,11 @@ export class EmployeeService {
 
   // * GET
   async findAll(): Promise<Employee[]> {
-    return await this.employeeRepository.find();
+    return await this.repository.find();
   }
 
   async findById(id: string): Promise<Employee> {
-    const employee = await this.employeeRepository.findOne(id);
+    const employee = await this.repository.findOne(id);
     if (!employee) {
       throw notFoundException(employeeErrors.NOT_FOUND);
     }
@@ -62,7 +61,7 @@ export class EmployeeService {
     const { employerId: empId, vat } = employeeDto;
 
     if (vat) {
-      const duplicate = await this.employeeRepository.findOne({ vat });
+      const duplicate = await this.repository.findOne({ vat });
       if (duplicate && duplicate.id.toString() !== id) {
         throw duplicateException(generalErrors.VAT_MUST_BE_UNIQUE);
       }
@@ -74,7 +73,7 @@ export class EmployeeService {
     }
 
     try {
-      return await this.employeeRepository.save(updated);
+      return await this.repository.save(updated);
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -85,7 +84,7 @@ export class EmployeeService {
     const employeeToDelete = await this.findById(id);
 
     try {
-      return await this.employeeRepository.remove(employeeToDelete);
+      return await this.repository.remove(employeeToDelete);
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
