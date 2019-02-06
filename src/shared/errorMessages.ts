@@ -9,6 +9,7 @@ export const generalErrors = {
   AME_LENGTH: 'Ο ΑΜΕ αποτελείται από 10 αριθμούς.',
   TOO_MANY_CHARACTERS: 'Εισάγετε λιγότερους χαρακτήρες.',
   VAT_MUST_BE_UNIQUE: 'Αυτός ο ΑΦΜ χρησιμοποιείται ήδη.',
+  DB_INSERTION_ERROR: 'Σφάλμα καταχώρησης στη βάση.',
 };
 export const employerErrors = {
   NOT_FOUND: errorGenerator.not_found('εργοδότης'),

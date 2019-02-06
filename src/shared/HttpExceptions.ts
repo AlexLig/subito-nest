@@ -11,3 +11,6 @@ export const duplicateException = (message: string) =>
 
 export const serverErrorException = (err?: any) =>
   new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+
+export const databaseWriteException = (message = e.DB_INSERTION_ERROR) =>
+  new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
