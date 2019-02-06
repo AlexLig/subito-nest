@@ -1,9 +1,13 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Employer } from './employer.entity';
 import { CreateEmployerDto } from './dto/createEmployer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { notFoundException } from 'src/shared/HttpExceptions';
+import {
+  notFoundException,
+  serverErrorException,
+  duplicateException,
+} from 'src/shared/HttpExceptions';
 import { employerErrors, generalErrors } from 'src/shared';
 
 @Injectable()
@@ -34,15 +38,14 @@ export class EmployerService {
 
   // * POST
   async create(employerInfo: CreateEmployerDto): Promise<Employer> {
-    const { ame } = employerInfo;
-    if (ame && ame.length !== 10) {
-      throw new HttpException(generalErrors.AME_LENGTH, HttpStatus.BAD_REQUEST);
-    }
+    const { vat } = employerInfo;
+    const duplicate = await this.repository.findOne({ vat });
+    if (duplicate) throw duplicateException(generalErrors.VAT_MUST_BE_UNIQUE);
 
     try {
       return await this.repository.save(employerInfo);
     } catch (e) {
-      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw serverErrorException(e);
     }
   }
 
@@ -57,7 +60,7 @@ export class EmployerService {
     try {
       return await this.repository.save(updated);
     } catch (e) {
-      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw serverErrorException(e);
     }
   }
 

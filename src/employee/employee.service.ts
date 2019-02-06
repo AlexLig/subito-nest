@@ -7,6 +7,7 @@ import {
   notFoundException,
   employeeErrors,
   duplicateException,
+  generalErrors,
 } from 'src/shared';
 import { Employer } from 'src/employer/employer.entity';
 import { EmployerService } from 'src/employer/employer.service';
@@ -25,7 +26,7 @@ export class EmployeeService {
 
     const duplicate = await this.repository.findOne({ vat });
     if (duplicate) {
-      throw duplicateException(employeeErrors.VAT_MUST_BE_UNIQUE);
+      throw duplicateException(generalErrors.VAT_MUST_BE_UNIQUE);
     }
 
     const employer = await this.employerService.findById(employerId);
@@ -59,7 +60,7 @@ export class EmployeeService {
     if (vat) {
       const duplicate = await this.repository.findOne({ vat });
       if (duplicate && duplicate.id.toString() !== id) {
-        throw duplicateException(employeeErrors.VAT_MUST_BE_UNIQUE);
+        throw duplicateException(generalErrors.VAT_MUST_BE_UNIQUE);
       }
     }
 

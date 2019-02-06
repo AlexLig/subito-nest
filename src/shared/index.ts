@@ -1,2 +1,2 @@
-export { notFoundException, duplicateException } from './HttpExceptions';
+export { notFoundException, duplicateException, serverErrorException } from './HttpExceptions';
 export { employerErrors, generalErrors, employeeErrors } from './errorMessages';
