@@ -10,7 +10,7 @@ import { EmployerController } from './employer/employer.controller';
 import { EmployerModule } from './employer/employer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { isDuplicateVat } from './middlewares';
+import { isDuplicateVat } from './middleware';
 import { repositories as r } from './shared';
 
 @Module({
