@@ -1,18 +1,18 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
-import { databaseWriteException } from 'src/shared';
-import { repositories as r } from '../shared';
+import { databaseWriteException, Entities } from 'src/shared';
 
 type Properties = 'vat' | 'ame';
+// type Repositories = r.EMPLOYEE;
 
-const isDuplicate = (property: Properties) => (repository: string) => async (
+const isDuplicate = (property: Properties) => (repository: Entities) => async (
   req: any,
   res: any,
   next: any,
 ) => {
-  if (repository !== r.EMPLOYEE && repository !== r.EMPLOYER) {
-    throw new HttpException('Wrong repository', 400);
-  }
+  // if (repository !== r.EMPLOYEE && repository !== r.EMPLOYER) {
+  //   throw new HttpException('Wrong repository', 400);
+  // }
 
   const value = req.body[property];
   let duplicate;

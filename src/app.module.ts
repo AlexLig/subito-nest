@@ -11,7 +11,7 @@ import { EmployerModule } from './employer/employer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { isDuplicateVat } from './middleware';
-import { repositories as r } from './shared';
+import { repositories } from './shared';
 
 @Module({
   imports: [EmployeeModule, EmployerModule, TypeOrmModule.forRoot()],
@@ -23,11 +23,11 @@ export class AppModule implements NestModule {
   constructor(private readonly connection: Connection) {}
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(isDuplicateVat(r.EMPLOYEE))
+      .apply(isDuplicateVat(repositories.EMPLOYEE))
       .forRoutes({ path: 'api/employee', method: RequestMethod.POST });
 
     consumer
-      .apply(isDuplicateVat(r.EMPLOYER))
+      .apply(isDuplicateVat(repositories.EMPLOYER))
       .forRoutes({ path: 'api/employer', method: RequestMethod.POST });
   }
 }

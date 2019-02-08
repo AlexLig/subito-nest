@@ -5,4 +5,4 @@ export {
   databaseWriteException,
 } from './HttpExceptions';
 export { employerErrors, generalErrors, employeeErrors } from './errorMessages';
-export { repositories } from './repositories';
+export { repositories, Entities, IRepositories } from './repositories';
