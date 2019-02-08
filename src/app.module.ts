@@ -10,7 +10,7 @@ import { EmployerController } from './employer/employer.controller';
 import { EmployerModule } from './employer/employer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { isDuplicateVat } from './middleware';
+import { isDuplicateVatEmployee, isDuplicateVatEmployer } from './middleware';
 import { repositories } from './shared';
 
 @Module({
@@ -23,11 +23,11 @@ export class AppModule implements NestModule {
   constructor(private readonly connection: Connection) {}
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(isDuplicateVat(repositories.EMPLOYEE))
+      .apply(isDuplicateVatEmployee)
       .forRoutes({ path: 'api/employee', method: RequestMethod.POST });
 
     consumer
-      .apply(isDuplicateVat(repositories.EMPLOYER))
+      .apply(isDuplicateVatEmployer)
       .forRoutes({ path: 'api/employer', method: RequestMethod.POST });
   }
 }

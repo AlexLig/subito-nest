@@ -1,1 +1,4 @@
-export { isDuplicateVat } from './isDuplicate.middleware';
+export {
+  isDuplicateVatEmployee,
+  isDuplicateVatEmployer,
+} from './isDuplicate.middleware';
