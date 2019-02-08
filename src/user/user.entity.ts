@@ -1,4 +1,4 @@
 import { Entity } from "typeorm";
 
-@Entity()
-export class User {}
+// @Entity()
+// export class User {}

@@ -11,7 +11,6 @@ import { EmployerModule } from './employer/employer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { isDuplicateVatEmployee, isDuplicateVatEmployer } from './middleware';
-import { repositories } from './shared';
 
 @Module({
   imports: [EmployeeModule, EmployerModule, TypeOrmModule.forRoot()],
