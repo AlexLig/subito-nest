@@ -7,40 +7,54 @@ import {
   Param,
   Put,
   Delete,
+  HttpException,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './employee.dto';
 import { Employee } from './employee.entity';
+import { EmployerService } from 'src/employer/employer.service';
+import { validate } from 'class-validator';
 
 @Controller('/api/employee')
 export class EmployeeController {
-  constructor(private readonly service: EmployeeService) {}
+  constructor(
+    private readonly employeeService: EmployeeService,
+    private readonly employerService: EmployerService,
+  ) {}
 
   @Post()
-  createEmployee(@Body() createEmployeeDto: CreateEmployeeDto) {
-    return this.service.create(createEmployeeDto);
+  async createEmployee(@Body() createEmployeeDto: CreateEmployeeDto) {
+    const { employerId, vat } = createEmployeeDto;
+    const employer = await this.employerService.findById(employerId);
+    // has extra property "employerId" that employeeService does not need. TODO: remove it and tranform the obj to the Employee class.
+    const employeData = { ...createEmployeeDto, employer };
+    return this.employeeService.create(employeData);
   }
 
   @Get()
   findAllEmployees() {
-    return this.service.findAll();
+    return this.employeeService.findAll();
   }
 
   @Get(':id')
   findEmployee(@Param('id') id) {
-    return this.service.findById(id);
+    return this.employeeService.findById(id);
   }
 
   @Put(':id')
-  updateEmployee(
+  async updateEmployee(
     @Param('id') id,
-    @Body() createEmployeeDto: Partial<CreateEmployeeDto>,
+    @Body() employeeDto: Partial<CreateEmployeeDto>,
   ) {
-    return this.service.findByIdAndUpdate(id, createEmployeeDto);
+    const employeeToUpdate = await this.employeeService.findById(id);
+    if (!employeeToUpdate) throw new HttpException('Employee Not found', 404);
+    const employeeData = { ...employeeToUpdate, ...employeeDto };
+
+    return this.employeeService.findByIdAndUpdate(id, employeeDto);
   }
 
   @Delete(':id')
   deleteEmployee(@Param('id') id) {
-    return this.service.findByIdAndDelete(id);
+    return this.employeeService.findByIdAndDelete(id);
   }
 }

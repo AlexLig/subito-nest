@@ -5,7 +5,10 @@ import { TrimPipe } from './pipes/TrimPipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new TrimPipe(), new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(
+    new TrimPipe(),
+    new ValidationPipe({ transform: true, whitelist: true }),
+  );
   await app.listen(3000);
 }
 bootstrap();

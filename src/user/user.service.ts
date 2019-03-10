@@ -7,5 +7,5 @@ export class UserService {
 
   async createUser(userDto: UserDto) {}
   async getUser(id: string) {}
-  async deleteUser(id:string) {}
+  async deleteUser(id: string) {}
 }
