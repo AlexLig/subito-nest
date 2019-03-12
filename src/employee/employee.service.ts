@@ -9,6 +9,7 @@ import {
   duplicateException,
   generalErrors,
   serverErrorException,
+  employerErrors,
 } from 'src/shared';
 import { Employer } from 'src/employer/employer.entity';
 import { EmployerService } from 'src/employer/employer.service';
@@ -18,13 +19,29 @@ export class EmployeeService {
   constructor(
     @InjectRepository(Employee)
     private readonly repository: Repository<Employee>,
-    private readonly employerService: EmployerService,
+    @InjectRepository(Employer)
+    private readonly employerRepo: Repository<Employer>,
   ) {}
 
   // * POST
   async create(employee: CreateEmployeeDto): Promise<Employee> {
+    // Get employer
+    let employer: Employer;
     try {
-      return await this.repository.save(employee);
+      employer = await this.employerRepo.findOne(employee.employerId);
+    } catch (error) {
+      throw serverErrorException(error);
+    }
+
+    // Check if exists
+    if (!employer) throw notFoundException(employerErrors.NOT_FOUND);
+
+    // Combine dto with employer
+    const employeeToCreate = { ...employee, employer };
+
+    // save to db
+    try {
+      return await this.repository.save(employeeToCreate);
     } catch (e) {
       throw serverErrorException(e);
     }
@@ -59,8 +76,8 @@ export class EmployeeService {
     }
 
     if (empId) {
-      const employer: Employer = await this.employerService.findById(empId);
-      updated = { ...updated, employer };
+      // const employer: Employer = await this.employerService.findById(empId);
+      // updated = { ...updated, employer };
     }
 
     try {
