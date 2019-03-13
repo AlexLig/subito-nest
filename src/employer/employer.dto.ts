@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { generalErrors as e } from '../shared';
 
-export class CreateEmployerDto {
+export class EmployerDto {
   @IsString()
   @MaxLength(255, { message: e.TOO_MANY_CHARACTERS })
   readonly name: string;
