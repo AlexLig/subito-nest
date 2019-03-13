@@ -17,17 +17,17 @@ export class EmployeeController {
 
   @Post()
   async createEmployee(@Body() employeeDto: EmployeeDto) {
-    return await this.employeeService.create(employeeDto);
+    return await this.employeeService.createOrFail(employeeDto);
   }
 
   @Get()
-  findAllEmployees() {
-    return this.employeeService.findAll();
+  async findAllEmployees() {
+    return await this.employeeService.findAllOrFail();
   }
 
   @Get(':id')
-  findEmployee(@Param('id') id) {
-    return this.employeeService.findByIdOrFail(id);
+  async findEmployee(@Param('id') id) {
+    return await this.employeeService.findByIdOrFail(id);
   }
 
   @Put(':id')
@@ -35,11 +35,11 @@ export class EmployeeController {
     @Param('id') id,
     @Body() employeeDto: Partial<EmployeeDto>,
   ) {
-    return this.employeeService.updateByIdOrFail(id, employeeDto);
+    return await this.employeeService.updateByIdOrFail(id, employeeDto);
   }
 
   @Delete(':id')
-  deleteEmployee(@Param('id') id) {
-    return this.employeeService.deleteByIdOrFail(id);
+  async deleteEmployee(@Param('id') id) {
+    return await this.employeeService.deleteByIdOrFail(id);
   }
 }
