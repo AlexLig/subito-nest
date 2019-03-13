@@ -9,7 +9,7 @@ export const notFoundException = (message = e.NOT_FOUND) =>
 export const duplicateException = (message: string) =>
   new HttpException(message, HttpStatus.BAD_REQUEST);
 
-export const serverErrorException = (err?: any) =>
+export const error500 = (err: string | object) =>
   new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
 
 export const databaseWriteException = (message = e.DB_INSERTION_ERROR) =>

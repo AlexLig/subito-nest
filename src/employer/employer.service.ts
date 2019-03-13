@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
   notFoundException,
-  serverErrorException,
+  error500,
   duplicateException,
 } from 'src/shared/HttpExceptions';
 import { employerErrors, generalErrors } from 'src/shared';
@@ -45,7 +45,7 @@ export class EmployerService {
     try {
       return await this.repository.save(employerInfo);
     } catch (e) {
-      throw serverErrorException(e);
+      throw error500(e);
     }
   }
 
@@ -67,7 +67,7 @@ export class EmployerService {
     try {
       return await this.repository.save(updated);
     } catch (e) {
-      throw serverErrorException(e);
+      throw error500(e);
     }
   }
 
@@ -78,7 +78,7 @@ export class EmployerService {
     try {
       return await this.repository.remove(employerToDelete);
     } catch (e) {
-      throw serverErrorException(e);
+      throw error500(e);
     }
   }
 }

@@ -2,7 +2,7 @@ import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Employee } from './employee.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateEmployeeDto } from './employee.dto';
+import { EmployeeDto } from './employee.dto';
 import {
   notFoundException,
   employeeErrors,
@@ -13,32 +13,23 @@ import {
 } from 'src/shared';
 import { Employer } from 'src/employer/employer.entity';
 import { EmployerService } from 'src/employer/employer.service';
+import { error500 } from 'src/shared/HttpExceptions';
 
 @Injectable()
 export class EmployeeService {
   constructor(
     @InjectRepository(Employee)
     private readonly repository: Repository<Employee>,
-    @InjectRepository(Employer)
-    private readonly employerRepo: Repository<Employer>,
+    private readonly employerService: EmployerService,
   ) {}
 
   // * POST
-  async create(employee: CreateEmployeeDto): Promise<Employee> {
+  async create(employeeDto: EmployeeDto): Promise<Employee> {
     // Get employer
     let employer: Employer;
-    try {
-      employer = await this.employerRepo.findOne(employee.employerId);
-    } catch (error) {
-      throw serverErrorException(error);
-    }
-
-    // Check if exists
-    if (!employer) throw notFoundException(employerErrors.NOT_FOUND);
-
+    // employer = await this.employerService.findOne(employeeDto.employerId);
     // Combine dto with employer
-    const employeeToCreate = { ...employee, employer };
-
+    const employeeToCreate = { ...employeeDto, employer };
     // save to db
     try {
       return await this.repository.save(employeeToCreate);
@@ -49,24 +40,32 @@ export class EmployeeService {
 
   // * GET
   async findAll(): Promise<Employee[]> {
-    return await this.repository.find();
+    try {
+      return await this.repository.find();
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findById(id: string): Promise<Employee> {
-    const employee = await this.repository.findOne(id);
-    if (!employee) {
-      throw notFoundException(employeeErrors.NOT_FOUND);
+    let employee: Employee;
+    try {
+      employee = await this.repository.findOne(id);
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    if (!employee)
+      throw new HttpException(employeeErrors.NOT_FOUND, HttpStatus.NOT_FOUND);
 
     return employee;
   }
 
   // * PUT
-  async findByIdAndUpdate(id: string, employeeDto: Partial<CreateEmployeeDto>) {
+  async findByIdAndUpdate(id: string, employeeDto: Partial<EmployeeDto>) {
     const employeeToUpdate = await this.findById(id);
     let updated: Employee = { ...employeeToUpdate, ...employeeDto };
 
-    const { employerId: empId, vat } = employeeDto;
+    const { employerId, vat } = employeeDto;
 
     if (vat) {
       const duplicate = await this.repository.findOne({ vat });
@@ -75,7 +74,7 @@ export class EmployeeService {
       }
     }
 
-    if (empId) {
+    if (employerId) {
       // const employer: Employer = await this.employerService.findById(empId);
       // updated = { ...updated, employer };
     }

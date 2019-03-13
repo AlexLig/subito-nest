@@ -1,7 +1,7 @@
 export {
   notFoundException,
   duplicateException,
-  serverErrorException,
+  error500 as serverErrorException,
   databaseWriteException,
 } from './HttpExceptions';
 export { employerErrors, generalErrors, employeeErrors } from './errorMessages';
