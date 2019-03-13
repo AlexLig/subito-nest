@@ -18,12 +18,12 @@ export class EmployerController {
   @Get()
   getAllEmployers() {
     // TODO: Get foreign key from User and if priviledged, return matching employers.
-    return this.service.findAll();
+    return this.service.findAllOrFail();
   }
 
   @Get(':id')
   getEmployer(@Param('id') id: string) {
-    return this.service.findById(id, true);
+    return this.service.findByIdOrFail(id, true);
   }
 
   // POST
