@@ -27,7 +27,7 @@ export class EmployeeController {
 
   @Get(':id')
   findEmployee(@Param('id') id) {
-    return this.employeeService.findById(id);
+    return this.employeeService.findByIdOrFail(id);
   }
 
   @Put(':id')
@@ -35,11 +35,11 @@ export class EmployeeController {
     @Param('id') id,
     @Body() employeeDto: Partial<EmployeeDto>,
   ) {
-    return this.employeeService.findByIdAndUpdate(id, employeeDto);
+    return this.employeeService.updateByIdOrFail(id, employeeDto);
   }
 
   @Delete(':id')
   deleteEmployee(@Param('id') id) {
-    return this.employeeService.findByIdAndDelete(id);
+    return this.employeeService.deleteByIdOrFail(id);
   }
 }
