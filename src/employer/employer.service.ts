@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Employer } from './employer.entity';
 import { CreateEmployerDto } from './employer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,7 +8,7 @@ import {
   error500,
   duplicateException,
 } from 'src/shared/HttpExceptions';
-import { employerErrors, generalErrors } from 'src/shared';
+import { employerErrors as e, generalErrors } from 'src/shared';
 
 @Injectable()
 export class EmployerService {
@@ -17,21 +17,37 @@ export class EmployerService {
     private readonly repository: Repository<Employer>,
   ) {}
 
-  // * GET
-  async findAll(): Promise<Employer[]> {
-    const employers = await this.repository.find();
-    if (employers.length < 1) throw notFoundException();
+  /** Returns an array of all the Employers. */
+  async findAllOrFail(): Promise<Employer[]> {
+    // Get all employers.
+    const employers: Employer[] = await this.repository.find();
+
+    // If none, throw not found.
+    if (employers.length < 1)
+      throw new HttpException(e.NOT_FOUND_MANY, HttpStatus.NOT_FOUND);
 
     return employers;
   }
 
-  async findById(id: string, getAll = false): Promise<Employer> {
-    const employer = await this.repository.findOne(
-      id,
-      getAll && { relations: ['employees'] },
-    );
+  /**
+   * Returns an Employer by its ID. If getRelatedEmployees is true,
+   * adds Employee[] property as employer.employees property.
+   */
+  async findByIdOrFail(id: string, getRelatedEmployees = false): Promise<Employer> {
+    let employer: Employer;
 
-    if (!employer) throw notFoundException(employerErrors.NOT_FOUND);
+    // If not getRelated, find Employer.
+    if (!getRelatedEmployees) employer = await this.repository.findOne(id);
+
+    // If getRelated, find Employer with relations 'employees'.
+    if (getRelatedEmployees) {
+      employer = await this.repository.findOne(id, {
+        relations: ['employees'],
+      });
+    }
+
+    // If not found, throw 404.
+    if (!employer) throw new HttpException(e.NOT_FOUND, HttpStatus.NOT_FOUND);
 
     return employer;
   }
@@ -54,7 +70,7 @@ export class EmployerService {
     id: string,
     employerDto: Partial<CreateEmployerDto>,
   ): Promise<Employer> {
-    const employerToUpdate = await this.findById(id);
+    const employerToUpdate = await this.findByIdOrFail(id);
     const updated = { ...employerToUpdate, ...employerDto };
     const { vat } = employerDto;
     if (vat) {
@@ -73,7 +89,7 @@ export class EmployerService {
 
   // * DELETE
   async delete(id: string): Promise<Employer> {
-    const employerToDelete = await this.findById(id);
+    const employerToDelete = await this.findByIdOrFail(id);
 
     try {
       return await this.repository.remove(employerToDelete);

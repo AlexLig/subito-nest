@@ -1,5 +1,6 @@
 const errorGenerator = {
   not_found: (name: string) => `Δεν βρέθηκε ${name} με αυτά τα στοιχεία.`,
+  not_found_many: (name: string) => `Δεν βρέθηκαν ${name} με αυτά τα στοιχεία.`,
 };
 
 export const generalErrors = {
@@ -13,6 +14,7 @@ export const generalErrors = {
 };
 export const employerErrors = {
   NOT_FOUND: errorGenerator.not_found('εργοδότης'),
+  NOT_FOUND_MANY: errorGenerator.not_found_many('εργοδότες'),
 };
 export const employeeErrors = {
   NOT_FOUND: errorGenerator.not_found('υπάλληλος'),
