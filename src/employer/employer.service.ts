@@ -1,14 +1,9 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Employer } from './employer.entity';
-import { CreateEmployerDto } from './employer.dto';
+import { EmployerDto } from './employer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  notFoundException,
-  error500,
-  duplicateException,
-} from 'src/shared/HttpExceptions';
-import { employerErrors as e, generalErrors } from 'src/shared';
+import { employerErrors as e, generalErrors as ge } from 'src/shared';
 
 @Injectable()
 export class EmployerService {
@@ -33,7 +28,10 @@ export class EmployerService {
    * Returns an Employer by its ID. If getRelatedEmployees is true,
    * adds Employee[] property as employer.employees property.
    */
-  async findByIdOrFail(id: string, getRelatedEmployees = false): Promise<Employer> {
+  async findByIdOrFail(
+    id: string,
+    getRelatedEmployees = false,
+  ): Promise<Employer> {
     let employer: Employer;
 
     // If not getRelated, find Employer.
@@ -52,49 +50,41 @@ export class EmployerService {
     return employer;
   }
 
-  // * POST
-  async create(employerInfo: CreateEmployerDto): Promise<Employer> {
-    const { vat } = employerInfo;
-    const duplicate = await this.repository.findOne({ vat });
-    if (duplicate) throw duplicateException(generalErrors.VAT_MUST_BE_UNIQUE);
+  /** Saves an Employer to the db and returns it. If vat is duplicate, throws bad request */
+  async createOrFail(dto: EmployerDto): Promise<Employer> {
+    // If vat is duplicate, throw bad request.
+    const duplicate: Employer = await this.repository.findOne({ vat: dto.vat });
+    if (duplicate)
+      throw new HttpException(ge.VAT_MUST_BE_UNIQUE, HttpStatus.BAD_REQUEST);
 
-    try {
-      return await this.repository.save(employerInfo);
-    } catch (e) {
-      throw error500(e);
-    }
+    return await this.repository.save(dto);
   }
 
-  // * PUT
-  async update(
-    id: string,
-    employerDto: Partial<CreateEmployerDto>,
-  ): Promise<Employer> {
+  /**
+   * Finds and updates an Employer.
+   * If the inserted vat is a duplicate (exists on another Employer), throw Error.
+   */
+  async updateOrFail(id: string, dto: Partial<EmployerDto>): Promise<Employer> {
+    // If vat is duplicate, throw bad request.
+    if (dto.vat) {
+      const duplicate = await this.repository.findOne({ vat: dto.vat });
+      if (duplicate && duplicate.id.toString() !== id)
+        throw new HttpException(ge.VAT_MUST_BE_UNIQUE, HttpStatus.BAD_REQUEST);
+    }
+    // Find Employer to update.
     const employerToUpdate = await this.findByIdOrFail(id);
-    const updated = { ...employerToUpdate, ...employerDto };
-    const { vat } = employerDto;
-    if (vat) {
-      const duplicate = await this.repository.findOne({ vat });
-      if (duplicate && duplicate.id.toString() !== id) {
-        throw duplicateException(generalErrors.VAT_MUST_BE_UNIQUE);
-      }
-    }
 
-    try {
-      return await this.repository.save(updated);
-    } catch (e) {
-      throw error500(e);
-    }
+    // Merge Employer with dto.
+    const updated = { ...employerToUpdate, ...dto };
+
+    // Save to db.
+    return await this.repository.save(updated);
   }
 
-  // * DELETE
+  /** Removes an Employer from the db by its ID, and returns the deleted Employer. */
   async delete(id: string): Promise<Employer> {
     const employerToDelete = await this.findByIdOrFail(id);
 
-    try {
-      return await this.repository.remove(employerToDelete);
-    } catch (e) {
-      throw error500(e);
-    }
+    return await this.repository.remove(employerToDelete);
   }
 }
