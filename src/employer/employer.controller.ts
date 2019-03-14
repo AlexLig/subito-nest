@@ -28,10 +28,10 @@ export class EmployerController {
    */
   @Get(':id')
   getEmployer(
-    @Param('id') id: string,
+    @Param() params: any,
     @Query('getRelatedEmployees') getRelatedEmployes: boolean, // TODO: Sanitize query string!
   ) {
-    return this.service.findByIdOrFail(id, getRelatedEmployes);
+    return this.service.findByIdOrFail(params.id, getRelatedEmployes);
   }
 
   // --- CREATE ---
@@ -42,13 +42,13 @@ export class EmployerController {
 
   // --- UPDATE ---
   @Put(':id')
-  updateEmployer(@Param('id') id: string, @Body() employer: EmployerDto) {
-    return this.service.updateOrFail(id, employer);
+  updateEmployer(@Param() params: any, @Body() employer: EmployerDto) {
+    return this.service.updateOrFail(params.id, employer);
   }
 
   // --- DELETE ---
   @Delete(':id')
-  deleteEmployer(@Param('id') id: string) {
-    return this.service.delete(id);
+  deleteEmployer(@Param() params: any) {
+    return this.service.delete(params.id);
   }
 }

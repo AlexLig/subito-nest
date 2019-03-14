@@ -68,7 +68,7 @@ export class EmployerService {
     // If vat is duplicate, throw bad request.
     if (dto.vat) {
       const duplicate = await this.repository.findOne({ vat: dto.vat });
-      if (duplicate && duplicate.id.toString() !== id[0])
+      if (duplicate && duplicate.id.toString() !== id)
         throw new HttpException(ge.VAT_MUST_BE_UNIQUE, HttpStatus.BAD_REQUEST);
     }
     // Find Employer to update.

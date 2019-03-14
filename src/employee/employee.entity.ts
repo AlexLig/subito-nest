@@ -9,7 +9,8 @@ export class Employee {
   @Column({ length: 500 })
   name: string;
 
-  @Column({ length: 9, unique: true })
+  // unique = true?
+  @Column({ length: 9 })
   vat: string;
 
   @Column('time')
